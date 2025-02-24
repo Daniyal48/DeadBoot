@@ -14,21 +14,54 @@ DeadBoot is a **fast, lightweight, and unkillable** bootloader designed to load 
 
 ---
 
-## 🚀 How It Works
+## ⚙️ Environment Setup
 
-1. DeadBoot loads from the **MBR (Master Boot Record)**.  
-2. Displays a **menu** where you can choose a kernel.  
-3. Reads the selected **kernel from disk** and loads it into memory.  
-4. Switches to **Protected Mode** and hands over execution.  
+Before you can build **DeadBoot**, you need to set up a **cross-compilation toolchain** with **Binutils** and **GCC**.
 
-It's **fast, flexible, and refuses to die** (unlike your system after a bad kernel update).  
-
----
-
-## 📦 Installation
-
-### **1️⃣ Build DeadBoot**
-You'll need **NASM** and **QEMU** (or a real machine if you're feeling brave).  
+### **1️⃣ Install Binutils**  
+Download Binutils from [GNU FTP](https://ftp.gnu.org/gnu/binutils/) and follow these steps:
 
 ```sh
-nasm -f bin deadboot.asm -o deadboot.img
+# Extract the binutils archive
+tar -xvf binutils-x.y.z.tar.gz
+
+# Navigate to the source directory
+cd $HOME/src
+mkdir build-binutils
+cd build-binutils
+
+# Configure and compile
+../binutils-x.y.z/configure --target=$TARGET --prefix="$PREFIX" --with-sysroot --disable-nls --disable-werror
+make
+make install
+
+
+# Extract the GCC archive
+Download GCC from here: https://ftp.lip6.fr/pub/gcc/releases/
+tar -xvf gcc-x.y.z.tar.gz
+
+# Navigate to the source directory
+cd $HOME/src
+
+# Ensure Binutils is correctly installed
+which -- $TARGET-as || echo $TARGET-as is not in the PATH
+
+# Create a build directory for GCC
+mkdir build-gcc
+cd build-gcc
+
+# Configure and compile
+../gcc-x.y.z/configure --target=$TARGET --prefix="$PREFIX" --disable-nls --enable-languages=c,c++ --without-headers --disable-hosted-libstdcxx
+make all-gcc
+make all-target-libgcc
+make all-target-libstdc++-v3
+make install-gcc
+make install-target-libgcc
+make install-target-libstdc++-v3
+
+
+## ⚔️ Contributing
+
+💀 If DeadBoot crashes your system, it’s your fault, not mine.
+💀 If you find a bug, submit a PR or issue, but expect sarcasm in response.
+💀 Want to add a feature? Fork it and make something even more ridiculous.
