@@ -21,17 +21,28 @@ start:
     sti                 ;enable interrupts
 
 
-;LOAD KERNEL 
-mov bx, KERNEL_LOAD_SEG
-mov dh, 0x00
-mov dl, 0x80
-mov cl, 0x02
-mov ch, 0x00
-mov ah, 0x02
-mov al, 8
-int 0x13
 
-jc disk_read_error
+;Change # 1...Changes made to the KERNEL Load function to add support for bigger KERNEls
+;Loading Kernel Dynamically
+mov bx, KERNEL_LOAD_SEG     ;Load Kernel at 0x1000:000
+mov dh, 0x00                ;Start 0
+mov dl, 0x80                ; First Hard disk
+mov ch, 0x00                ; Cylinder 0
+mov cl, 0x02                ; Start from Sector 2
+
+mov si, 32                  ; Number of sectors to load (Will be adjusted according to the kernel)
+
+disk_read_loop:
+    mov ah, 0x02            ; BIOS Read Sector function
+    mov al, 1               ; Read 1 Sector at a time
+    int 0x13                ; call BIOS
+
+    jc disk_read_error      ; if carry flag set, jump to error handler
+
+    add bx, 512             ; Move buffer forward by 512 bytes
+    inc cl                  ; move to next sector
+    dec si                  ; Decrease sector count
+    jnz disk_read_loop      ; repeat until all sectors are Read
 
 
 load_PM:
