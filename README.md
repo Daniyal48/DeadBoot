@@ -59,9 +59,10 @@ make install-gcc
 make install-target-libgcc
 make install-target-libstdc++-v3
 ```
+---
 
 ## ⚔️ Contributing
 
-💀 If DeadBoot crashes your system, it’s your fault, not mine.
-💀 If you find a bug, submit a PR or issue, but expect sarcasm in response.
-💀 Want to add a feature? Fork it and make something even more ridiculous.
+💀 **If DeadBoot crashes your system, it’s your fault, not mine.
+💀 **If you find a bug, submit a PR or issue, but expect sarcasm in response.
+💀 **Want to add a feature? Fork it and make something even more ridiculous.
